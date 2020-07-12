@@ -1,0 +1,174 @@
+---
+title: "Data Exploration"
+author: "anestis.karonidis@gmail.com"
+date: "11/7/2020"
+output: html_document
+---
+
+```{r}
+setwd('F:/general_datasets')
+library(tidyverse)
+library(countrycode)
+hotel_data<- read_csv("hotel_bookings.csv")
+remove(df)
+```
+
+```{r}
+ggplot(data = hotel_data, aes(x = hotel)) +
+  geom_bar(stat = "count") +
+  labs(title = "Booking Request by Hotel type",
+       x = "Hotel type",
+       y = "No. of bookings") +
+  theme_classic() + scale_color_brewer(palette = "Set2")
+```
+
+```{r}
+ggplot(data = hotel_data, aes(x = hotel)) +
+  geom_bar(stat = "count") +
+  labs(title = "Booking Request by Hotel type",
+       x = "Hotel type",
+       y = "No. of bookings") +
+  theme_classic() + scale_color_brewer(palette = "Set2")
+```
+
+```{r}
+ggplot(data = hotel_data,
+       aes(
+         x = hotel,
+         y = prop.table(stat(count)),
+         fill = factor(is_canceled),
+         label = scales::percent(prop.table(stat(count)))
+       )) +
+  geom_bar(position = position_dodge()) +
+  geom_text(
+    stat = "count",
+    position = position_dodge(.9),
+    vjust = -0.5,
+    size = 3
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Cancellation Status by Hotel Type",
+       x = "Hotel Type",
+       y = "Count") +
+  theme_classic() +
+  scale_fill_discrete(
+    name = "Booking Status",
+    breaks = c("0", "1"),
+    labels = c("Cancelled", "Not Cancelled")
+  )
+```
+
+```{r}
+ggplot(data = hotel_data, aes(
+  x = hotel,
+  y = lead_time,
+  fill = factor(is_canceled)
+)) +
+  geom_boxplot(position = position_dodge()) +
+  labs(
+    title = "Cancellation By Hotel Type",
+    subtitle = "Based on Lead Time",
+    x = "Hotel Type",
+    y = "Lead Time (Days)"
+  ) +
+  scale_fill_discrete(
+    name = "Booking Status",
+    breaks = c("0", "1"),
+    labels = c("Cancelled", "Not Cancelled")
+  ) + theme_light()
+```
+
+```{r}
+hotel_data$arrival_date_month <-
+  factor(hotel_data$arrival_date_month, levels = month.name)
+# Visualize Hotel traffic on Monthly basis
+ggplot(data = hotel_data, aes(x = arrival_date_month)) +
+  geom_bar(fill = "steelblue") +
+  geom_text(stat = "count", aes(label = ..count..), hjust = 1) +
+  coord_flip() + labs(title = "Month Wise Booking Request",
+                      x = "Month",
+                      y = "Count") +
+  theme_classic()
+```
+
+```{r}
+ggplot(hotel_data, aes(arrival_date_month, fill = factor(is_canceled))) +
+  geom_bar() + geom_text(stat = "count", aes(label = ..count..), hjust = 1) +
+  coord_flip() + scale_fill_discrete(
+    name = "Booking Status",
+    breaks = c("0", "1"),
+    label = c("Cancelled", "Not Cancelled")
+  ) +
+  labs(title = "Booking Status by Month",
+       x = "Month",
+       y = "Count") + theme_bw()
+```
+
+```{r}
+ggplot(hotel_data, aes(arrival_date_month, fill = hotel)) +
+  geom_bar(position = position_dodge()) +
+  labs(title = "Booking Status by Month",
+       x = "Month",
+       y = "Count") + theme_bw()
+```
+
+```{r}
+# where are the people coming from
+hotel_data_1 <- hotel_data[hotel_data$reservation_status == "Check-Out",]
+# Subset the data to include the countries which has more than 1500 reservation request
+# otherwise including all the country with few or occassional request to avoid the graph
+# from being clumsy
+sub_hotel <- hotel_data_1 %>% 
+  group_by(country) %>% 
+  filter(n() > 1500)
+
+# Visualize the Travellor by Country.
+
+  sub_hotel$county_name <- countrycode(sub_hotel$country, 
+                                     origin = "iso3c",
+                                     destination = "country.name")
+
+# Traveller by Country per hotel wise
+ggplot(sub_hotel, aes(county_name, fill = hotel)) + 
+  geom_bar(stat = "count", position = position_dodge()) + 
+  labs(title = "Booking Status by Country",
+       x = "Country",
+       y = "Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_blank())
+```
+
+```{r}
+ggplot(sub_hotel, aes(stays_in_weekend_nights + stays_in_week_nights)) + 
+  geom_density(col = "red") +facet_wrap(~hotel) + theme_bw()
+```
+
+```{r}
+ggplot(sub_hotel, aes(x = adr, fill = hotel, color = hotel)) + 
+  geom_histogram(aes(y = ..density..), position = position_dodge(), binwidth = 20 ) +
+  geom_density(alpha = 0.2) + 
+  labs(title = "Average Daily rate by Hotel",
+       x = "Hotel Price(in Euro)",
+       y = "Count") + scale_color_brewer(palette = "Paired") + 
+  theme_classic() + theme(legend.position = "top")
+
+```
+
+```{r}
+ggplot(sub_hotel, aes(customer_type, fill = hotel)) + 
+  geom_bar(stat = "count", position = position_dodge()) + 
+  labs(title = "Hotel Preference by Customer Type",
+       x = "Customer Type",
+       y = "Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.background = element_blank())
+```
+
+```{r}
+ggplot(sub_hotel, aes(x = customer_type, y = adr, fill = hotel)) + 
+  geom_boxplot(position = position_dodge()) + 
+  labs(title = "Price Charged by Hotel Type",
+       subtitle = "for Customer Type",
+       x = "Customer Type",
+       y = "Price per night(in Euro)") + theme_classic()
+```
