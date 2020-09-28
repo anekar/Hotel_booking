@@ -1,11 +1,17 @@
-<h1>Hotel booking</h1> 
-<p> 
- <ul> 
-<li>Wanted ever to know what is the best period of time to book a 
-hotel room?</li>
-<li>what is the average time of a customer staying in a room.</li>
-</ul>
-With this dataset from Kaggle these questions can answered.
-In order to practise my skills in Exploratory Data Analysis 
-i have downloaded this dataset.
-
+<h1>Hotel Booking</h1>
+<h2>General Information
+<p>This data set contains booking information for a city hotel and a resort hotel, and includes information such as when the booking was made, length of stay, the number of adults, children, and/or babies, and the number of available parking spaces, 
+among other things.
+This project was analyzed with R programming language and 
+specifically with RStudio Cloud</p></h2>
+<h3>Questions that answers this dataset
+<ul>
+<li>When the best time of year to book a hotel room is</li>
+<li>The optimal length of stay in order to get the best daily rate</li>
+</ul></h3>
+<h4>Libraries
+<p>The libraries that were used for this project were
+<ol>
+<li>library (tidyverse)</li>
+<li>library (countrycode)</li>
+library (ggplot2)</ol></h4>
