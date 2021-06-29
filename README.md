@@ -1,5 +1,5 @@
 <h1>Hotel Booking</h1>
-<p>This data set contains booking information for a city hotel and a resort hotel, and includes information such as when the booking was made, length of stay, the number <br>
+<p>This dataset contains booking information for a city hotel and a resort hotel, and includes information such as when the booking was made, length of stay, the number <br>
 of adults, children, and/or babies, and the number of available parking spaces, among other things.
 This project was analyzed with R programming language and specifically with RStudio Cloud</p>
 <h2>Questions that answers this dataset</h2
