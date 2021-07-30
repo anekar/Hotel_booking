@@ -6,7 +6,7 @@ This project was analyzed with R programming language and specifically with RStu
 <br>
 
 <ul>
-<li>When the best time of year to book a hotel room is</li>
+<li>When is the best time of year to book a hotel room is</li>
 <li>The optimal length of stay in order to get the best daily rate</li>
 </ul>
 
